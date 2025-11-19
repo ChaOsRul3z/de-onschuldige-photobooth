@@ -3,15 +3,16 @@ import os
 from google import genai
 from google.genai import types
 from PIL import Image
+from dotenv import load_dotenv
 
-path="/home/chaosrul3z/Workspaces/mct/de-onschuldige-photobooth/data/media/camera_original"
+load_dotenv()
 
-list_of_files = glob.glob(f'{path}/*') # * means all if need specific format then *.csv
+list_of_files = glob.glob(f'{os.getenv("MEDIA_PATH")}/*') # * means all if need specific format then *.csv
 latest_file = max(list_of_files, key=os.path.getctime)
 
 
 
-client = genai.Client(api_key="")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 prompt = (
     "Put him in a purple shirt, sitting at a table in a restaurant."
