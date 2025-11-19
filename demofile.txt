@@ -1,0 +1,1 @@
+this echoed on event finished for mediaitem_type image!
