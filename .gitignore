@@ -1,5 +1,6 @@
 # CUSTOM .gitignore for Python project
 *.jpg
+*.png
 *.json_backup*
 
 # Byte-compiled / optimized / DLL files

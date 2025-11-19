@@ -36,15 +36,15 @@
   "tasks_commands": [
     {
       "enabled": true,
-      "name": "demo command",
+      "name": "process image with ai",
       "event": [
         "finished"
       ],
       "filter_mediaitem_types": [],
       "delay_before": 0.0,
       "wait_until_completed": false,
-      "timeout": 5,
-      "command": "echo this echoed on event {event} for mediaitem_type {mediaitem_type}!"
+      "timeout": 120,
+      "command": "python /home/chaosrul3z/Workspaces/mct/de-onschuldige-photobooth/image_ai_edit.py"
     }
   ]
 }
