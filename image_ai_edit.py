@@ -30,4 +30,4 @@ for part in response.parts:
         print(part.text)
     elif part.inline_data is not None:
         image = part.as_image()
-        image.save("generated_image.png")
+        image.save(f"{os.getenv('AI_GEN_PATH')}/{os.path.basename(latest_file)}_ai_gen.png")
