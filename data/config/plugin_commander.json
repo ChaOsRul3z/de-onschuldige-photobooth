@@ -44,7 +44,7 @@
       "delay_before": 0.0,
       "wait_until_completed": false,
       "timeout": 120,
-      "command": "python /home/chaosrul3z/Workspaces/mct/de-onschuldige-photobooth/image_ai_edit.py"
+      "command": "python /home/chaosrul3z/Workspaces/mct/de-onschuldige-photobooth/ai_processing.py"
     }
   ]
 }

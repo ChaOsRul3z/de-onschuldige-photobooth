@@ -167,13 +167,15 @@
         "description": "Webcam",
         "backend_config": {
           "orientation": "1: 0°",
-          "backend_type": "WebcamPyav",
-          "device_identifier": "/dev/v4l/by-id/usb-SunplusIT_Trust_4K_Webcam_01.00.00-video-index0",
-          "cam_resolution_width": 3840,
-          "cam_resolution_height": 2160,
-          "cam_framerate": 0,
-          "preview_resolution_reduce_factor": 2,
-          "frame_skip_count": 3
+          "backend_type": "WebcamV4l",
+          "device_identifier": "/dev/video0",
+          "pixel_format_fourcc": "MJPG",
+          "CAM_RESOLUTION_WIDTH": 640,
+          "CAM_RESOLUTION_HEIGHT": 480,
+          "switch_to_high_resolution_for_stills": true,
+          "HIRES_CAM_RESOLUTION_WIDTH": 4192,
+          "HIRES_CAM_RESOLUTION_HEIGHT": 3104,
+          "flush_number_frames_after_switch": 2
         }
       }
     ]
