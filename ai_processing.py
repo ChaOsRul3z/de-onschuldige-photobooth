@@ -30,16 +30,15 @@ def transcribe_audio_file(file_path: str) -> str:
         model="gemini-2.5-flash", contents=["transcribe", myfile]
     )
 
-    print(response.text)
-    
     return response.text
 
 def generate_single_prompt_from_text(text: str) -> str:
+    return format(os.getenv("TEMP_SPEECH_TO_TEXT"))
+
     response = client.models.generate_content(
         model="gemini-2.5-flash", contents=[text + os.linesep + os.linesep + single_prompt_modifier]
     )
-    print("SINGLE PROMPT:")
-    print(response.text)
+
     return response.text
 
 def modify_image_based_on_prompt(image_path: str, prompt: str):
