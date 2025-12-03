@@ -1,13 +1,20 @@
-int potPin = A0;     // Potentiometer pin
+int potPin = A0;
 
-int led1Pin = 9;     // LED Strip 1 (Kan veranderen indien ze te dichtbij elkaar staan)
-int led2Pin = 10;    // LED Strip 2 (Kan ook veranderen zorg gewoon dat de pin in code ook verandert als het het geval is)
+int led1Pin = 9;
+int led2Pin = 10;
 
-int button1Pin = 2;  // Button 1 voor Flicker Mode
-int button2Pin = 3;  // Button 2 voor Strobe + Shock effect
+int button1Pin = 2;
+int button2Pin = 3;
 
-int trigPin = 11;
-int echoPin = 12;
+enum Mode { NORMAL, FLICKER, STROBE_HOLD };
+Mode currentMode = NORMAL;
+
+unsigned long modeStartTime = 0;
+unsigned long lastToggle = 0;
+bool ledState = false;
+
+bool lastB1 = HIGH;
+bool lastB2 = HIGH;
 
 void setup() {
   pinMode(led1Pin, OUTPUT);
@@ -18,64 +25,71 @@ void setup() {
 }
 
 void loop() {
+  readButtons();
 
-  int b1 = digitalRead(button1Pin);
-  int b2 = digitalRead(button2Pin);
-
-  // Button 1 met een flicker voor een paar seconden
-  if (b1 == LOW) {
-    flickerMode();
-  }
-
-  // Button 2 zorgt voor strobe en shock effect met alleen maar 1 LED strip dat aan blijft 
-  //voor dit code zijn er 2 LED strips maar het principe blijft hetzelfde met oneindigveel LEDs
-  if (b2 == LOW) {
-    strobeThenHold();
-  }
-
-  int potValue = analogRead(potPin);               
-  int brightness = map(potValue, 0, 1023, 0, 255); 
-
-  // Beide strips voor hetzelfde brightness knob
-  analogWrite(led1Pin, brightness);
-  analogWrite(led2Pin, brightness);
-}
-
-
-void flickerMode() {
-  unsigned long startTime = millis();
-
-  while (millis() - startTime < 3000) {
-    digitalWrite(led1Pin, HIGH);
-    digitalWrite(led2Pin, HIGH);
-    delay(100);
-
-    digitalWrite(led1Pin, LOW);
-    digitalWrite(led2Pin, LOW);
-    delay(100);
-  }
-}
-
-
-void strobeThenHold() {
-  // Strobe effect voor 2 seconden
-  unsigned long startTime = millis();
-
-  while (millis() - startTime < 3000) {
-    digitalWrite(led1Pin, HIGH);
-    digitalWrite(led2Pin, HIGH);
-    delay(25);
-
-    digitalWrite(led1Pin, LOW);
-    digitalWrite(led2Pin, LOW);
-    delay(25);
-  }
-
-  // Lichten flickeren -> LED Strip 1 gaat uit
-  analogWrite(led1Pin, 0);
-
-  // LED strip 2 blijft aan met haar ingestelde brightness
-  int potValue = analogRead(A0);
+  int potValue = analogRead(potPin);
   int brightness = map(potValue, 0, 1023, 0, 255);
-  analogWrite(led2Pin, brightness);
+
+  switch (currentMode) {
+    case NORMAL:
+      analogWrite(led1Pin, brightness);
+      analogWrite(led2Pin, brightness);
+      break;
+
+    case FLICKER:
+      runBlinkMode(60, brightness, false);
+      break;
+
+    case STROBE_HOLD:
+      runBlinkMode(100, brightness, true);
+      break;
+  }
+}
+
+void readButtons() {
+  bool b1 = digitalRead(button1Pin);
+  bool b2 = digitalRead(button2Pin);
+
+  if (lastB1 == HIGH && b1 == LOW) {
+    currentMode = FLICKER;
+    modeStartTime = millis();
+    lastToggle = millis();
+    ledState = false;
+  }
+  lastB1 = b1;
+
+  if (lastB2 == HIGH && b2 == LOW) {
+    currentMode = STROBE_HOLD;
+    modeStartTime = millis();
+    lastToggle = millis();
+    ledState = false;
+  }
+  lastB2 = b2;
+}
+
+void runBlinkMode(int interval, int brightness, bool holdAfter) {
+  unsigned long now = millis();
+  unsigned long elapsed = now - modeStartTime;
+
+  // Blink for 3 seconds
+  if (elapsed < 3000) {
+    if (now - lastToggle > interval) {
+      lastToggle = now;
+      ledState = !ledState;
+
+      analogWrite(led1Pin, ledState ? brightness : 0);
+      analogWrite(led2Pin, ledState ? brightness : 0);
+    }
+    return;
+  }
+
+  // After 3 seconds:
+  if (holdAfter) {
+    // Strobe/Hold: LED1 off, LED2 held at brightness
+    analogWrite(led1Pin, 0);
+    analogWrite(led2Pin, brightness);
+  } else {
+    // Flicker ends → return to normal
+    currentMode = NORMAL;
+  }
 }
