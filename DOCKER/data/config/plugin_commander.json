@@ -1,0 +1,16 @@
+{
+  "enable_tasks_processing": true,
+  "tasks_httprequests": [],
+  "tasks_commands": [
+    {
+      "enabled": true,
+      "name": "process image with ai",
+      "event": [
+        "finished"
+      ],
+      "wait_until_completed": false,
+      "timeout": 120,
+      "command": "python /photobooth/data/scripts/ai_processing.py"
+    }
+  ]
+}
