@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "gpio_lights": [
+    {
+      "enable": true,
+      "description": "main light",
+      "gpio_pin": 2,
+      "active_high": false,
+      "events": [
+        "on@countdown_start",
+        "off@after_capture"
+      ]
+    }
+  ]
+}

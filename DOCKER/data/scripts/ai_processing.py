@@ -8,10 +8,11 @@ from PIL import Image
 
 load_dotenv()
 
-list_of_files = glob.glob(f'{os.getenv("MEDIA_PATH")}/*') # * means all if need specific format then *.csv
+
+list_of_files = glob.glob(f'{os.getenv("MEDIA_PATH")}/camera_original/*') # * means all if need specific format then *.csv
 latest_file = max(list_of_files, key=os.path.getctime)
 
-audio_path = os.getenv("AUDIO_PATH")
+audio_path = f'{os.getenv("AUDIO_PATH")}/audio/127389__acclivity__thetimehascome.mp3'
 
 image_modification_modifier = os.getenv("IMAGE_MODIFIER")
 single_prompt_modifier = os.getenv("SINGLE_PROMPT_MODIFIER")
@@ -55,7 +56,7 @@ def modify_image_based_on_prompt(image_path: str, prompt: str):
             print(part.text)
         elif part.inline_data is not None:
             image = part.as_image()
-            image.save(f"{os.getenv('AI_GEN_PATH')}/{os.path.basename(image_path)}_ai_gen.png")
+            image.save(f"{os.getenv('MEDIA_PATH')}/ai_edited/{os.path.basename(image_path)}_ai_gen.png")
 
 
 # generate_single_prompt_from_text(transcribe_audio_file(audio_path))
